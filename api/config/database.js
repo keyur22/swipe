@@ -1,12 +1,5 @@
 import mongoose from 'mongoose';
 
-// const uri =
-//   'mongodb+srv://keyurchaudharicareer:enpqS7o0Jzsub19P@tinder.qywm4fj.mongodb.net/?retryWrites=true&w=majority&appName=Tinder';
-
-// const connectionOptions = {
-//   dbName: 'Swipe'
-// };
-
 const connectDb = async () => {
   try {
     const conn = await mongoose.connect(process.env.MONGO_URI);
