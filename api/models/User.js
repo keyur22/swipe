@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -34,6 +35,22 @@ const userSchema = new mongoose.Schema({
   dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   matches: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
+
+userSchema.pre('save', async function (next) {
+  // Don't hash if password not modified
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  /// Hash password before saving
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+// Check if passwords match
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 const User = mongoose.model('User', userSchema);
 
