@@ -1,11 +1,22 @@
 import User from '../models/User.js';
 
+const setAuthCookie = async (newUser, res) => {
+  const token = await newUser.getJWT();
+
+  res.cookie('token', token, {
+    maxAge: 1000 * 60 * 60 * 24, // 1 day
+    httpOnly: true, // prevents XSS attacks
+    sameSite: 'strict', // prevents CSRF attacks
+    secure: process.env.NODE_ENV === 'production'
+  });
+};
+
 export const signup = async (req, res) => {
   try {
     const { name, email, age, password, gender, genderPreference } =
       req.body || {};
 
-    if (!name || !email || !password || !gender || !genderPreference || !age) {
+    if (!name || !email || !age || !password || !gender || !genderPreference) {
       return res.json({
         success: false,
         message: 'All fields are required'
@@ -28,24 +39,47 @@ export const signup = async (req, res) => {
       name,
       email,
       password,
-      gender,
       age,
+      gender,
       genderPreference
     });
 
-    const token = await newUser.getJWT();
-
-    res.cookie('token', token, {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-      httpOnly: true, // prevents XSS attacks
-      sameSite: 'strict', // prevents CSRF attacks
-      secure: process.env.NODE_ENV === 'production'
-    });
+    await setAuthCookie(newUser, res);
 
     res.status(201).json({
       success: true,
       user: newUser
     });
+  } catch (err) {
+    console.log('Error in signup controller: ', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body || {};
+
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ success: false, message: 'All fields are required' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || !(await user.matchPassword(password))) {
+      res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    console.log(await user.matchPassword(password));
+
+    await setAuthCookie(user, res);
+
+    res.json({ success: true, user });
   } catch (err) {
     console.log('Error in signup controller: ', err);
     res.status(500).json({ success: false, message: 'Server error' });
