@@ -31,3 +31,31 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
+export const getConversation = async (req, res) => {
+  const userId = req.params?.userId;
+  const currentUser = req.user;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
+    }
+
+    const messages = await Message.find({
+      // getting conversation between two users who can be either sender or receiver
+      $or: [
+        { senderId: currentUser.id, receiverId: userId },
+        { senderId: userId, receiverId: currentUser.id }
+      ]
+    }).sort('createdAt');
+
+    res.status(200).json({ success: true, messages });
+  } catch (err) {
+    console.log('Error in getConversation Controller, ', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
