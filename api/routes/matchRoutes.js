@@ -9,10 +9,12 @@ import {
 
 const router = express.Router();
 
-router.get('/', auth, getMatches);
-router.get('/user-profiles', auth, getUserProfiles);
+router.use(auth);
 
-router.get('/swipe-left/:dislikedUserId', auth, swipeLeft);
-router.get('/swipe-right/:likedUserId', auth, swipeRight);
+router.get('/', getMatches);
+router.get('/user-profiles', getUserProfiles);
+
+router.get('/swipe-left/:dislikedUserId', swipeLeft);
+router.get('/swipe-right/:likedUserId', swipeRight);
 
 export default router;

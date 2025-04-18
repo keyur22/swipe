@@ -57,6 +57,14 @@ export const swipeLeft = async (req, res) => {
   const dislikedUserId = req.params?.dislikedUserId;
 
   try {
+    const dislikedUser = await User.findById(dislikedUserId);
+
+    if (!dislikedUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
+    }
+
     const currentUser = await User.findById(req.user.id);
 
     if (!currentUser.dislikes.includes(dislikedUserId)) {
@@ -75,7 +83,6 @@ export const swipeRight = async (req, res) => {
   const likedUserId = req.params?.likedUserId;
 
   try {
-    const currentUser = await User.findById(req.user.id);
     const likedUser = await User.findById(likedUserId);
 
     if (!likedUser) {
@@ -83,6 +90,8 @@ export const swipeRight = async (req, res) => {
         .status(404)
         .json({ success: false, message: 'User not found' });
     }
+
+    const currentUser = await User.findById(req.user.id);
 
     if (!currentUser.likes.includes(likedUserId)) {
       currentUser.likes.push(likedUserId);
