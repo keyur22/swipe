@@ -22,8 +22,6 @@ const auth = async (req, res, next) => {
 
     const currentUser = await User.findById(decoded.id);
 
-    console.log(currentUser, decoded);
-
     if (!currentUser) {
       return res
         .status(404)
