@@ -1,9 +1,9 @@
 import express from 'express';
 import auth from '../middlewares/auth.js';
-import { update } from '../controllers/userController.js';
+import { updateProfile } from '../controllers/userController.js';
 
 const router = express.Router();
 
-router.patch('/update', auth, update);
+router.patch('/update', auth, updateProfile);
 
 export default router;

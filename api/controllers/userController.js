@@ -1,7 +1,7 @@
 import { uploadImage } from '../config/cloudinary.js';
 import User from '../models/User.js';
 
-export const update = async (req, res) => {
+export const updateProfile = async (req, res) => {
   const prohibitedUpdates = ['email', 'password'];
 
   const isUpdateAllowed = Object.keys(req.body).every(
