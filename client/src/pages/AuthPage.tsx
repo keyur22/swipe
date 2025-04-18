@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import LoginForm from '../components/LoginForm';
-import SignInForm from '../components/SignInForm';
+import SignUpForm from '../components/SignUpForm';
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,7 +12,7 @@ const AuthPage = () => {
           {isLogin ? 'Sign in to Swipe' : 'Create a Swipe account'}
         </h2>
         <div className='bg-white shadow-xl rounded-lg p-8'>
-          {isLogin ? <LoginForm /> : <SignInForm />}
+          {isLogin ? <LoginForm /> : <SignUpForm />}
           <div className='mt-8 text-center'>
             <p className='text-sm text-gray-600'>
               {isLogin ? 'New to Swipe?' : 'Already have an account?'}
