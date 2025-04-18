@@ -34,7 +34,14 @@ const auth = async (req, res, next) => {
     next();
   } catch (err) {
     console.log('Error in auth middleware: ', err);
-    res.status(401).json({ success: false, message: 'Not authorized' });
+
+    if (err instanceof jwt.JsonWebTokenError) {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Not authorized - Invalid token' });
+    } else {
+      return res.status(500).json({ success: false, message: 'Server error' });
+    }
   }
 };
 
