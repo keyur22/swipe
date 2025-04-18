@@ -7,10 +7,10 @@ export const getMatches = async (req, res) => {
       'name image'
     );
 
-    res.send({ success: true, matches: user.matches });
+    res.status(200).json({ success: true, matches: user.matches });
   } catch (err) {
     console.log('Error in getMatches controller: ', err);
-    res.send({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
 
@@ -49,6 +49,60 @@ export const getUserProfiles = async (req, res) => {
     res.status(200).json({ success: true, users });
   } catch (err) {
     console.log('Error in getUserProfiles controller: ', err);
-    res.send({ success: false, message: 'Server error' });
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+export const swipeLeft = async (req, res) => {
+  const dislikedUserId = req.params?.dislikedUserId;
+
+  try {
+    const currentUser = await User.findById(req.user.id);
+
+    if (!currentUser.dislikes.includes(dislikedUserId)) {
+      currentUser.dislikes.push(dislikedUserId);
+      await currentUser.save();
+    }
+
+    res.status(200).json({ success: true, user: currentUser });
+  } catch (err) {
+    console.log('Error in Swipe Left controller: ', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+export const swipeRight = async (req, res) => {
+  const likedUserId = req.params?.likedUserId;
+
+  try {
+    const currentUser = await User.findById(req.user.id);
+    const likedUser = await User.findById(likedUserId);
+
+    if (!likedUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'User not found' });
+    }
+
+    if (!currentUser.likes.includes(likedUserId)) {
+      currentUser.likes.push(likedUserId);
+      await currentUser.save();
+
+      // If other user has liked us, it's a match for both
+      if (likedUser.likes.includes(currentUser.id)) {
+        likedUser.matches.push(currentUser.id);
+        currentUser.matches.push(likedUserId);
+
+        // save both users
+        await Promise.all([await likedUser.save(), await currentUser.save()]);
+
+        // TODO: Send Notification if it is match -> Socket.io
+      }
+    }
+
+    res.status(200).json({ success: true, user: currentUser });
+  } catch (err) {
+    console.log('Error in Swipe Right controller: ', err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
