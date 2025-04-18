@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import matchRoutes from './routes/matchRoutes.js';
 import connectDb from './config/database.js';
 
 dotenv.config();
@@ -16,7 +17,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-// app.use('/api/matches');
+app.use('/api/matches', matchRoutes);
 // app.use('/api/messages');
 
 app.listen(PORT, () => {
