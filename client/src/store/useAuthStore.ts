@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import axiosInstance from '../lib/api-client';
-import { CurrentUser, SignUp } from '../interfaces/user';
+import { CurrentUser, Login, SignUp } from '../interfaces/user';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 
@@ -11,6 +11,7 @@ type Store = {
 
   checkAuth: () => Promise<void>;
   signUp: (SignupData: SignUp) => Promise<void>;
+  login: (LoginData: Login) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -50,11 +51,31 @@ const useAuthStore = create<Store>()((set) => ({
       set({ loading: false });
     }
   },
+  login: async (loginData: Login) => {
+    set({ loading: true });
+    try {
+      const res = await axiosInstance.post<CurrentUser>(
+        '/auth/login',
+        loginData
+      );
+      set({ authUser: res.data.user });
+      toast.success('Logged in successfully');
+    } catch (err) {
+      console.log(err);
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message || 'Something went wrong');
+      } else {
+        toast.error('Something went wrong');
+      }
+    } finally {
+      set({ loading: false });
+    }
+  },
   logout: async () => {
     try {
       await axiosInstance.get('/auth/logout');
       set({ authUser: null });
-      toast.success('User logged out successfully');
+      toast.success('Logged out successfully');
     } catch (err) {
       if (isAxiosError(err)) {
         toast.error(err.response?.data.message || 'Something went wrong');

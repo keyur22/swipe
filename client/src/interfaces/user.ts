@@ -7,6 +7,11 @@ export interface SignUp {
   genderPreference: string;
 }
 
+export interface Login {
+  email: string;
+  password: string;
+}
+
 export interface CurrentUser {
   user: {
     _id: string;
