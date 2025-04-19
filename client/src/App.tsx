@@ -10,7 +10,7 @@ import ProfilePage from './pages/ProfilePage';
 function App() {
   const { checkAuth, authUser, checkingAuth } = useAuthStore();
 
-  console.log('.......', checkingAuth, authUser, '.......');
+  console.log('.......', authUser, '.......');
 
   useEffect(() => {
     checkAuth();
@@ -29,10 +29,7 @@ function App() {
           path='/auth'
           element={!authUser ? <AuthPage /> : <Navigate to='/' />}
         />
-        <Route
-          path='/profile'
-          element={authUser ? <ProfilePage /> : <Navigate to='/auth' />}
-        />
+        <Route path='/profile' element={<ProfilePage />} />
       </Routes>
       <Toaster />
     </div>

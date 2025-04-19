@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axiosInstance from '../lib/api-client';
-import { CurrentUser, Login, SignUp } from '../interfaces/user';
+import { CurrentUser } from '../interfaces/user';
+import { Login, SignUp } from '../interfaces/auth';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 
