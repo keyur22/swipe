@@ -17,19 +17,19 @@ export const signup = async (req, res) => {
       req.body || {};
 
     if (!name || !email || !age || !password || !gender || !genderPreference) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: 'All fields are required'
       });
     }
     if (age < 18) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: 'You must be atleast 18 years old'
       });
     }
     if (password.length < 6) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: 'Password must be atleast 6 characters'
       });

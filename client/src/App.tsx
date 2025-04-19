@@ -3,6 +3,7 @@ import './App.css';
 import AuthPage from './pages/AuthPage';
 import useAuthStore from './store/useAuthStore';
 import { useEffect } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const { checkAuth, checkingAuth, authUser } = useAuthStore();
@@ -18,6 +19,7 @@ function App() {
       <Routes>
         <Route path='/auth' element={<AuthPage />} />
       </Routes>
+      <Toaster />
     </div>
   );
 }

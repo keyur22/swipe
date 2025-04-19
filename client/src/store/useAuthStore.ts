@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import axiosInstance from '../lib/api-client';
 import { CurrentUser, SignUp } from '../interfaces/user';
+import toast from 'react-hot-toast';
+import { isAxiosError } from 'axios';
 
 type Store = {
   loading: boolean;
@@ -35,8 +37,14 @@ const useAuthStore = create<Store>()((set) => ({
         signUpData
       );
       set({ authUser: res.data.user });
+      toast.success('Account created successfully');
     } catch (err) {
       console.log(err);
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message || 'Something went wrong');
+      } else {
+        toast.error('Something went wrong');
+      }
     } finally {
       set({ loading: false });
     }
