@@ -35,6 +35,15 @@ export const signup = async (req, res) => {
       });
     }
 
+    const user = await User.findOne({ email });
+
+    if (user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already exists'
+      });
+    }
+
     const newUser = await User.create({
       name,
       email,
@@ -51,8 +60,10 @@ export const signup = async (req, res) => {
       user: newUser
     });
   } catch (err) {
-    console.log('Error in signup controller: ', err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.log('Error in signup controller: ', err.message);
+    res
+      .status(500)
+      .json({ success: false, message: err.message | 'Server error' });
   }
 };
 

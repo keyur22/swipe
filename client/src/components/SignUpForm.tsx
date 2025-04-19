@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useAuthStore from '../store/useAuthStore';
 
 const SignUpForm = () => {
   const [name, setName] = useState('');
@@ -7,10 +8,25 @@ const SignUpForm = () => {
   const [age, setAge] = useState('');
   const [gender, setGender] = useState('');
   const [genderPreference, setGenderPreference] = useState('');
-  const loading = false;
 
+  const { signUp, loading } = useAuthStore();
+
+  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const signUpData = {
+      name,
+      email,
+      password,
+      age: +age,
+      gender,
+      genderPreference
+    };
+
+    signUp(signUpData);
+  };
   return (
-    <form className='space-y-6'>
+    <form className='space-y-6' onSubmit={onFormSubmit}>
       {/* NAME */}
       <div>
         <label
@@ -109,10 +125,12 @@ const SignUpForm = () => {
             <input
               id='male'
               name='gender'
-              type='checkbox'
+              type='radio'
+              value='male'
               checked={gender === 'male'}
               onChange={() => setGender('male')}
               className='h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded'
+              required
             />
             <label htmlFor='male' className='ml-2 block text-sm text-gray-900'>
               Male
@@ -122,7 +140,8 @@ const SignUpForm = () => {
             <input
               id='female'
               name='gender'
-              type='checkbox'
+              type='radio'
+              value='female'
               checked={gender === 'female'}
               onChange={() => setGender('female')}
               className='h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300 rounded'
@@ -152,6 +171,7 @@ const SignUpForm = () => {
               checked={genderPreference === 'male'}
               onChange={(e) => setGenderPreference(e.target.value)}
               className='h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-300'
+              required
             />
             <label
               htmlFor='prefer-male'

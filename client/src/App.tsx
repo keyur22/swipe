@@ -5,7 +5,9 @@ import useAuthStore from './store/useAuthStore';
 import { useEffect } from 'react';
 
 function App() {
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, checkingAuth, authUser } = useAuthStore();
+
+  console.log(checkingAuth, authUser);
 
   useEffect(() => {
     checkAuth();
