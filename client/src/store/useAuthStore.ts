@@ -11,6 +11,7 @@ type Store = {
 
   checkAuth: () => Promise<void>;
   signUp: (SignupData: SignUp) => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 const useAuthStore = create<Store>()((set) => ({
@@ -23,8 +24,8 @@ const useAuthStore = create<Store>()((set) => ({
       const res = await axiosInstance.get<CurrentUser>('/auth/profile');
       set({ authUser: res.data.user });
     } catch (err) {
-      set({ authUser: null });
       console.log(err);
+      set({ authUser: null });
     } finally {
       set({ checkingAuth: false });
     }
@@ -47,6 +48,19 @@ const useAuthStore = create<Store>()((set) => ({
       }
     } finally {
       set({ loading: false });
+    }
+  },
+  logout: async () => {
+    try {
+      await axiosInstance.get('/auth/logout');
+      set({ authUser: null });
+      toast.success('User logged out successfully');
+    } catch (err) {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message || 'Something went wrong');
+      } else {
+        toast.error('Something went wrong');
+      }
     }
   }
 }));
