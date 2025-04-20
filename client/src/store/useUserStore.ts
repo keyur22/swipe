@@ -5,10 +5,10 @@ import { updateProfileData, UserResponseData } from '../interfaces/user';
 import useAuthStore from './useAuthStore';
 import { isAxiosError } from 'axios';
 
-type Store = {
+interface Store {
   loading: boolean;
   updateProfile: (userData: updateProfileData) => Promise<void>;
-};
+}
 
 const useUserStore = create<Store>()((set) => ({
   loading: false,

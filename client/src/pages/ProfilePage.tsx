@@ -216,8 +216,11 @@ const ProfilePage = () => {
 
               <button
                 type='submit'
-                className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 
-								focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 cursor-pointer'
+                className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+                  loading
+                    ? 'bg-pink-400 cursor-not-allowed'
+                    : 'bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500'
+                }`}
                 disabled={loading}
               >
                 {loading ? 'Saving...' : 'Save'}

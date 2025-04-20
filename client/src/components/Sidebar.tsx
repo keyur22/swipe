@@ -1,16 +1,22 @@
 import { MessageCircle, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import LoadingMatches from './LoadingMatches';
 import NoMatchesFound from './NoMatchesFound';
+import useMatchStore from '../store/useMatchStore';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { loading: isLoadingMyMatches, matches, getMatches } = useMatchStore();
+
+  console.log(matches);
+
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  const isLoadingMyMatches = false;
-  const matches = [{ _id: 1, image: '', name: 'Clark Kent' }];
+  useEffect(() => {
+    getMatches();
+  }, []);
 
   return (
     <>
@@ -37,7 +43,7 @@ const Sidebar = () => {
           <div className='flex-grow overflow-y-auto p-4 z-10 relative'>
             {isLoadingMyMatches ? (
               <LoadingMatches />
-            ) : matches.length !== 0 ? (
+            ) : matches.length === 0 ? (
               <NoMatchesFound />
             ) : (
               matches.map((match) => (

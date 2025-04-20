@@ -5,7 +5,7 @@ import { LoginData, SignUpData } from '../interfaces/auth';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 
-type Store = {
+interface Store {
   loading: boolean;
   checkingAuth: boolean;
   authUser: null | UserData;
@@ -15,7 +15,7 @@ type Store = {
   login: (LoginData: LoginData) => Promise<void>;
   logout: () => Promise<void>;
   setAuthUser: (user: UserData) => void;
-};
+}
 
 const useAuthStore = create<Store>()((set) => ({
   loading: false,
