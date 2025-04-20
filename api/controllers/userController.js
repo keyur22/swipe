@@ -23,8 +23,8 @@ export const updateProfile = async (req, res) => {
       // base64 format
       if (image.startsWith('data:image')) {
         try {
-          const data = await uploadImage(image);
-          console.log(data);
+          const imageUrl = await uploadImage(image);
+          updatedData.image = imageUrl;
         } catch (err) {
           console.log('.....', err, '......');
           return res.status(400).json({ success: false, message: err });

@@ -1,29 +1,31 @@
 import { create } from 'zustand';
 import axiosInstance from '../lib/api-client';
-import { CurrentUser } from '../interfaces/user';
-import { Login, SignUp } from '../interfaces/auth';
+import { UserResponseData, UserData } from '../interfaces/user';
+import { LoginData, SignUpData } from '../interfaces/auth';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
 
 type Store = {
   loading: boolean;
   checkingAuth: boolean;
-  authUser: null | CurrentUser['user'];
+  authUser: null | UserData;
 
   checkAuth: () => Promise<void>;
-  signUp: (SignupData: SignUp) => Promise<void>;
-  login: (LoginData: Login) => Promise<void>;
+  signUp: (SignupData: SignUpData) => Promise<void>;
+  login: (LoginData: LoginData) => Promise<void>;
   logout: () => Promise<void>;
+  setAuthUser: (user: UserData) => void;
 };
 
 const useAuthStore = create<Store>()((set) => ({
   loading: false,
   checkingAuth: false,
   authUser: null,
+
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
-      const res = await axiosInstance.get<CurrentUser>('/auth/profile');
+      const res = await axiosInstance.get<UserResponseData>('/auth/profile');
       set({ authUser: res.data.user });
     } catch (err) {
       console.log(err);
@@ -32,10 +34,11 @@ const useAuthStore = create<Store>()((set) => ({
       set({ checkingAuth: false });
     }
   },
-  signUp: async (signUpData: SignUp) => {
+
+  signUp: async (signUpData: SignUpData) => {
     set({ loading: true });
     try {
-      const res = await axiosInstance.post<CurrentUser>(
+      const res = await axiosInstance.post<UserResponseData>(
         '/auth/signup',
         signUpData
       );
@@ -52,10 +55,11 @@ const useAuthStore = create<Store>()((set) => ({
       set({ loading: false });
     }
   },
-  login: async (loginData: Login) => {
+
+  login: async (loginData: LoginData) => {
     set({ loading: true });
     try {
-      const res = await axiosInstance.post<CurrentUser>(
+      const res = await axiosInstance.post<UserResponseData>(
         '/auth/login',
         loginData
       );
@@ -72,6 +76,7 @@ const useAuthStore = create<Store>()((set) => ({
       set({ loading: false });
     }
   },
+
   logout: async () => {
     try {
       await axiosInstance.get('/auth/logout');
@@ -84,7 +89,9 @@ const useAuthStore = create<Store>()((set) => ({
         toast.error('Something went wrong');
       }
     }
-  }
+  },
+
+  setAuthUser: (user: UserData) => set({ authUser: user })
 }));
 
 export default useAuthStore;
