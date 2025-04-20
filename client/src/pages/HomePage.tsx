@@ -1,17 +1,18 @@
-import useAuthStore from '../store/useAuthStore';
+import Header from '../components/Header';
 
 const HomePage = () => {
-  const { logout } = useAuthStore();
-
   return (
-    <div>
-      <p>HomePage</p>
-      <button
-        className='mt-2 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus: ring-2 focus:ring-offset-2 focus:ring-pink-500'
-        onClick={() => logout()}
-      >
-        Logout
-      </button>
+    <div
+      className='flex flex-col lg:flex-row min-h-screen bg-gradient-to-br from-pink-100 to-purple-100
+		 overflow-hidden
+		'
+    >
+      <div className='flex-grow flex flex-col overflow-hidden'>
+        <Header />
+        <main className='flex-grow flex flex-col gap-10 justify-center items-center p-4 relative overflow-hidden'>
+          Homepage
+        </main>
+      </div>
     </div>
   );
 };
