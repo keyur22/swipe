@@ -80,7 +80,7 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user || !(await user.matchPassword(password))) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: 'Invalid email or password'
       });

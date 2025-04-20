@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import useProfilesStore from '../store/useProfilesStore';
 import LoadingProfiles from './LoadingProfiles';
 import NoProfiles from './NoProfiles';
+import SwipeArea from './SwipeArea';
+import SwipeFeedback from './SwipeFeedback';
 
 const UserProfiles = () => {
   const { loading, getProfiles, profiles } = useProfilesStore();
@@ -14,9 +16,8 @@ const UserProfiles = () => {
     <>
       {profiles.length > 0 && !loading && (
         <>
-          <div>Helllo</div>
-          {/* <SwipeArea />
-							<SwipeFeedback /> */}
+          <SwipeArea />
+          <SwipeFeedback />
         </>
       )}
       {profiles.length === 0 && !loading && <NoProfiles />}

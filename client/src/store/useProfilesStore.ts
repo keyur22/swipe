@@ -1,19 +1,23 @@
 import { create } from 'zustand';
-import { Match } from '../interfaces/matches';
+
 import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import axiosInstance from '../lib/api-client';
-import { ProfilesResponse } from '../interfaces/profiles';
+import { Profile, ProfilesResponse } from '../interfaces/profiles';
 
 interface Store {
   loading: boolean;
-  profiles: Match[];
+  profiles: Profile[];
+  swipeFeedback: null | 'passed' | 'liked';
   getProfiles: () => Promise<void>;
+  swipeLeft: (dislikedUserId: string) => Promise<void>;
+  swipeRight: (likedUserId: string) => Promise<void>;
 }
 
 const useProfilesStore = create<Store>()((set) => ({
   loading: false,
   profiles: [],
+  swipeFeedback: null,
   getProfiles: async () => {
     set({ loading: true });
     try {
@@ -30,6 +34,28 @@ const useProfilesStore = create<Store>()((set) => ({
       }
     } finally {
       set({ loading: false });
+    }
+  },
+  swipeLeft: async (dislikedUserId: string) => {
+    try {
+      set({ swipeFeedback: 'passed' });
+      await axiosInstance.get('/matches/swipe-left/' + dislikedUserId);
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to swipe left');
+    } finally {
+      setTimeout(() => set({ swipeFeedback: null }), 1500);
+    }
+  },
+  swipeRight: async (likedUserId: string) => {
+    try {
+      set({ swipeFeedback: 'liked' });
+      await axiosInstance.get('/matches/swipe-right/' + likedUserId);
+    } catch (error) {
+      console.log(error);
+      toast.error('Failed to swipe right');
+    } finally {
+      setTimeout(() => set({ swipeFeedback: null }), 1500);
     }
   }
 }));

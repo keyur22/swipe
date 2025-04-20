@@ -44,7 +44,7 @@ export const getUserProfiles = async (req, res) => {
         },
         { genderPreference: { $in: [gender, 'both'] } }
       ]
-    }).select('name image');
+    }).select('name image age about');
 
     res.status(200).json({ success: true, users });
   } catch (err) {
