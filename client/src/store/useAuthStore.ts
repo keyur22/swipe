@@ -4,6 +4,7 @@ import { UserResponseData, UserData } from '../interfaces/user';
 import { LoginData, SignUpData } from '../interfaces/auth';
 import toast from 'react-hot-toast';
 import { isAxiosError } from 'axios';
+import { disconnectSocket, initializeSocket } from '../socket/socket.client';
 
 interface Store {
   loading: boolean;
@@ -27,6 +28,7 @@ const useAuthStore = create<Store>()((set) => ({
     try {
       const res = await axiosInstance.get<UserResponseData>('/auth/myProfile');
       set({ authUser: res.data.user });
+      initializeSocket(res.data.user._id);
     } catch (err) {
       console.log(err);
       set({ authUser: null });
@@ -43,6 +45,7 @@ const useAuthStore = create<Store>()((set) => ({
         signUpData
       );
       set({ authUser: res.data.user });
+      initializeSocket(res.data.user._id);
       toast.success('Account created successfully');
     } catch (err) {
       console.log(err);
@@ -64,6 +67,7 @@ const useAuthStore = create<Store>()((set) => ({
         loginData
       );
       set({ authUser: res.data.user });
+      initializeSocket(res.data.user._id);
       toast.success('Logged in successfully');
     } catch (err) {
       console.log(err);
@@ -81,6 +85,7 @@ const useAuthStore = create<Store>()((set) => ({
     try {
       await axiosInstance.get('/auth/logout');
       set({ authUser: null });
+      disconnectSocket();
       toast.success('Logged out successfully');
     } catch (err) {
       if (isAxiosError(err)) {
