@@ -9,4 +9,4 @@ export const USER_SAFE_FIELDS = [
 ];
 
 export const allowedGenders = ['male', 'female'];
-export const allowedGenderPreference = ['male', 'female', 'others'];
+export const allowedGenderPreference = ['male', 'female', 'both'];

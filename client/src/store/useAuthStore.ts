@@ -25,7 +25,7 @@ const useAuthStore = create<Store>()((set) => ({
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
-      const res = await axiosInstance.get<UserResponseData>('/auth/profile');
+      const res = await axiosInstance.get<UserResponseData>('/auth/myProfile');
       set({ authUser: res.data.user });
     } catch (err) {
       console.log(err);
