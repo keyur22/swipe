@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import validator from 'validator';
 import { allowedGenderPreference, allowedGenders } from '../utils/constants.js';
+import { getUserSafeFields } from '../utils/user.js';
 
 const setAuthCookie = async (newUser, res) => {
   const token = await newUser.getJWT();
@@ -11,21 +12,6 @@ const setAuthCookie = async (newUser, res) => {
     sameSite: 'strict', // prevents CSRF attacks
     secure: process.env.NODE_ENV === 'production'
   });
-};
-
-const getUserSafeFields = (user) => {
-  const { name, age, gender, genderPreference, about, image, email } =
-    user || {};
-
-  return {
-    name,
-    email,
-    age,
-    gender,
-    genderPreference,
-    about,
-    image
-  };
 };
 
 export const signup = async (req, res) => {

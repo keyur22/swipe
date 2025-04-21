@@ -1,5 +1,6 @@
 import { uploadImage } from '../config/cloudinary.js';
 import User from '../models/User.js';
+import { USER_SAFE_FIELDS } from '../utils/constants.js';
 
 export const updateProfile = async (req, res) => {
   const prohibitedUpdates = ['email', 'password'];
@@ -26,7 +27,7 @@ export const updateProfile = async (req, res) => {
           const imageUrl = await uploadImage(image);
           updatedData.image = imageUrl;
         } catch (err) {
-          console.log('.....', err, '......');
+          console.log('Err in image update controller ', err);
           return res.status(400).json({ success: false, message: err });
         }
       }
@@ -35,8 +36,8 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       updatedData,
-      { new: true }
-    );
+      { new: true, runValidators: true }
+    ).select(USER_SAFE_FIELDS);
 
     res.status(200).json({
       success: true,

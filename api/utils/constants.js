@@ -1,4 +1,5 @@
 export const USER_SAFE_FIELDS = [
+  // No need to specify _id, as it is sent by default when used with select()
   'name',
   'email',
   'age',
