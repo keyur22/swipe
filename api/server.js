@@ -10,7 +10,7 @@ import messageRoutes from './routes/messageRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
 import connectDb from './config/database.js';
-import initializeSocket from './socket/socket.server.js';
+import { initializeSocket } from './socket/socket.server.js';
 
 dotenv.config();
 
