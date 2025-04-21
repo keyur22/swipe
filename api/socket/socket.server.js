@@ -4,10 +4,19 @@ let io;
 
 const connectedUsers = new Map();
 
-const initializeSocket = (httpServer) => {
+export const initializeSocket = (httpServer) => {
   io = new Server(httpServer, {
     cors: process.env.CLIENT_URL,
     credentials: true
+  });
+
+  io.use((socket, next) => {
+    const userId = socket.handshake.auth.userId;
+
+    if (!userId) return next(new Error('Invalid User Id'));
+
+    socket.userId = userId;
+    next();
   });
 
   io.on('connection', (socket) => {
@@ -21,4 +30,11 @@ const initializeSocket = (httpServer) => {
   });
 };
 
-export default initializeSocket;
+export const getIO = () => {
+  if (!io) {
+    throw new Error('Scoket.io is not initialized!');
+  }
+  return io;
+};
+
+export const getConnectedUsers = () => connectedUsers;
