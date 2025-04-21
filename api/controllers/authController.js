@@ -1,4 +1,6 @@
 import User from '../models/User.js';
+import validator from 'validator';
+import { allowedGenderPreference, allowedGenders } from '../utils/constants.js';
 
 const setAuthCookie = async (newUser, res) => {
   const token = await newUser.getJWT();
@@ -11,27 +13,61 @@ const setAuthCookie = async (newUser, res) => {
   });
 };
 
+const getUserSafeFields = (user) => {
+  const { name, age, gender, genderPreference, about, image, email } =
+    user || {};
+
+  return {
+    name,
+    email,
+    age,
+    gender,
+    genderPreference,
+    about,
+    image
+  };
+};
+
 export const signup = async (req, res) => {
+  let validationErrorMessge = '';
+
   try {
     const { name, email, age, password, gender, genderPreference } =
       req.body || {};
 
+    // Validations
     if (!name || !email || !age || !password || !gender || !genderPreference) {
-      return res.status(400).json({
-        success: false,
-        message: 'All fields are required'
-      });
+      validationErrorMessge = 'All fields are required';
     }
+
+    if (name.length < 1 || name.length > 30) {
+      validationErrorMessge = 'Name cannot be greater than 30 characters';
+    }
+
+    if (!validator.isEmail(email)) {
+      validationErrorMessge = 'Enter a valid email address';
+    }
+
     if (age < 18) {
-      return res.status(400).json({
-        success: false,
-        message: 'You must be atleast 18 years old'
-      });
+      validationErrorMessge = 'You must be atleast 18 years old';
     }
-    if (password.length < 6) {
+
+    if (!validator.isStrongPassword(password)) {
+      validationErrorMessge = 'Enter a strong password';
+    }
+
+    if (!allowedGenders.includes(gender)) {
+      validationErrorMessge = 'Enter a valid gender';
+    }
+
+    if (!allowedGenderPreference.includes(genderPreference)) {
+      validationErrorMessge = 'Enter a valid gender preference';
+    }
+
+    if (validationErrorMessge) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be atleast 6 characters'
+        message: validationErrorMessge
       });
     }
 
@@ -57,7 +93,7 @@ export const signup = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      user: newUser
+      user: getUserSafeFields(newUser)
     });
   } catch (err) {
     console.log('Error in signup controller: ', err.message);
@@ -88,7 +124,7 @@ export const login = async (req, res) => {
 
     await setAuthCookie(user, res);
 
-    res.json({ success: true, user });
+    res.json({ success: true, user: getUserSafeFields(user) });
   } catch (err) {
     console.log('Error in login controller: ', err);
     res.status(500).json({ success: false, message: 'Server error' });

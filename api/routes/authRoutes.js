@@ -8,7 +8,7 @@ router.post('/signup', signup);
 router.post('/login', login);
 router.get('/logout', logout);
 
-router.get('/profile', auth, async (req, res) => {
+router.get('/myProfile', auth, async (req, res) => {
   res.send({ success: true, user: req.user });
 });
 
