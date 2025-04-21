@@ -2,6 +2,7 @@ import { Server } from 'socket.io';
 
 let io;
 
+// Loggedin userId: socketId
 const connectedUsers = new Map();
 
 export const initializeSocket = (httpServer) => {
@@ -13,7 +14,7 @@ export const initializeSocket = (httpServer) => {
   io.use((socket, next) => {
     const userId = socket.handshake.auth.userId;
 
-    if (!userId) return next(new Error('Invalid User Id'));
+    if (!userId) return next(new Error('Invalid User ID'));
 
     socket.userId = userId;
     next();
