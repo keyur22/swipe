@@ -20,7 +20,7 @@ const SwipeFeedback = () => {
   return (
     <div
       className={`
-		absolute top-10 left-0 right-0 text-center text-2xl font-bold ${getFeedbackStyle(
+		absolute top-10 lg:top-4 left-0 right-0 text-center text-2xl font-bold ${getFeedbackStyle(
       swipeFeedback
     )}
 		`}
