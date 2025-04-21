@@ -1,19 +1,22 @@
-import dotenv from 'dotenv';
-import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import dotenv from 'dotenv';
+import express from 'express';
+import { createServer } from 'http';
 
 import authRoutes from './routes/authRoutes.js';
-import userRoutes from './routes/userRoutes.js';
 import matchRoutes from './routes/matchRoutes.js';
 import messageRoutes from './routes/messageRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 import connectDb from './config/database.js';
+import initializeSocket from './socket/socket.server.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.port || 5000;
+const httpServer = createServer(app);
 
 app.use(express.json({ limit: '200mb' }));
 app.use(cookieParser());
@@ -24,12 +27,14 @@ app.use(
   })
 );
 
+initializeSocket(httpServer);
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/messages', messageRoutes);
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log('Server started at this port:  ' + PORT);
   connectDb();
 });
