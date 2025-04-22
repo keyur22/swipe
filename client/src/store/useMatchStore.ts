@@ -3,11 +3,14 @@ import toast from 'react-hot-toast';
 import { create } from 'zustand';
 import axiosInstance from '../lib/api-client';
 import { Match, MatchesResponse } from '../interfaces/matches';
+import { getSocket } from '../socket/socket.client';
 
 interface Store {
   loading: boolean;
   matches: Match[];
   getMatches: () => Promise<void>;
+  subscribeToNewMatches: () => void;
+  unsubscribeFromNewMatches: () => void;
 }
 
 const useMatchStore = create<Store>()((set) => ({
@@ -27,6 +30,29 @@ const useMatchStore = create<Store>()((set) => ({
       }
     } finally {
       set({ loading: false });
+    }
+  },
+  subscribeToNewMatches: () => {
+    try {
+      const socket = getSocket();
+
+      // newMatch event emitted from server
+      socket.on('newMatch', (newMatch) => {
+        set((state) => ({
+          matches: [...state.matches, newMatch]
+        }));
+        toast.success('You got a new match!');
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  unsubscribeFromNewMatches: () => {
+    try {
+      const socket = getSocket();
+      socket.off('newMatch');
+    } catch (err) {
+      console.log(err);
     }
   }
 }));

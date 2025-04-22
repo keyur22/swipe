@@ -10,6 +10,8 @@ const Header = () => {
   const { authUser, logout } = useAuthStore();
   const dropdownRef = useRef<null | HTMLInputElement>(null);
 
+  console.log(authUser);
+
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (

@@ -5,7 +5,8 @@ export const USER_SAFE_FIELDS = [
   'age',
   'gender',
   'genderPreference',
-  'about'
+  'about',
+  'image'
 ];
 
 export const allowedGenders = ['male', 'female'];

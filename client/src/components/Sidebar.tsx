@@ -43,10 +43,10 @@ const Sidebar = () => {
           <div className='flex-grow overflow-y-auto p-4 z-10 relative'>
             {isLoadingMyMatches ? (
               <LoadingMatches />
-            ) : matches.length === 0 ? (
+            ) : matches?.length === 0 ? (
               <NoMatchesFound />
             ) : (
-              matches.map((match) => (
+              matches?.map((match) => (
                 <Link key={match._id} to={`/chat/${match._id}`}>
                   <div className='flex items-center mb-4 cursor-pointer hover:bg-pink-50 p-2 rounded-lg transition-colors duration-300'>
                     <img

@@ -26,7 +26,7 @@ export const getMatches = async (req, res) => {
 
 export const getUserProfiles = async (req, res) => {
   try {
-    const currentUser = await User.findById(req.user.id);
+    const currentUser = await User.findById(req.user._id);
 
     const { id, likes, dislikes, matches, gender, genderPreference } =
       currentUser || {};
@@ -66,7 +66,7 @@ export const swipeLeft = async (req, res) => {
         .json({ success: false, message: 'User not found' });
     }
 
-    const currentUser = await User.findById(req.user.id);
+    const currentUser = await User.findById(req.user._id);
 
     if (!currentUser.dislikes.includes(dislikedUserId)) {
       currentUser.dislikes.push(dislikedUserId);
@@ -92,7 +92,7 @@ export const swipeRight = async (req, res) => {
         .json({ success: false, message: 'User not found' });
     }
 
-    const currentUser = await User.findById(req.user.id);
+    const currentUser = await User.findById(req.user._id);
 
     if (!currentUser.likes.includes(likedUserId)) {
       currentUser.likes.push(likedUserId);
@@ -122,13 +122,15 @@ export const swipeRight = async (req, res) => {
         }
 
         // Send real time notification to currentUser who is already loggedin, if liked user likes his profile
-        const currentUserSocketId = connectedUsers.get(currentUser._id);
+        const currentUserSocketId = connectedUsers.get(
+          currentUser._id.toString()
+        );
 
         if (currentUserSocketId) {
           io.to(currentUserSocketId).emit('newMatch', {
-            _id: likedUserId,
-            name: likedUserId,
-            image: likedUserId
+            _id: likedUser._id,
+            name: likedUser.name,
+            image: likedUser.image
           });
         }
       }

@@ -20,7 +20,7 @@ export const sendMessage = async (req, res) => {
     }
 
     const newMessage = await Message.create({
-      senderId: req.user.id,
+      senderId: req.user._id,
       receiverId,
       content
     });

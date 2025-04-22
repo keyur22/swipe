@@ -14,7 +14,7 @@ interface Store {
   swipeRight: (likedUserId: string) => Promise<void>;
 }
 
-const useProfilesStore = create<Store>()((set) => ({
+const useProfilesStore = create<Store>()((set, get) => ({
   loading: false,
   profiles: [],
   swipeFeedback: null,
@@ -40,6 +40,7 @@ const useProfilesStore = create<Store>()((set) => ({
     try {
       set({ swipeFeedback: 'passed' });
       await axiosInstance.get('/matches/swipe-left/' + dislikedUserId);
+      await get().getProfiles();
     } catch (error) {
       console.log(error);
       toast.error('Failed to swipe left');
@@ -51,6 +52,7 @@ const useProfilesStore = create<Store>()((set) => ({
     try {
       set({ swipeFeedback: 'liked' });
       await axiosInstance.get('/matches/swipe-right/' + likedUserId);
+      await get().getProfiles();
     } catch (error) {
       console.log(error);
       toast.error('Failed to swipe right');
