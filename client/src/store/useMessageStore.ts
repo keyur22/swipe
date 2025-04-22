@@ -4,7 +4,6 @@ import { isAxiosError } from 'axios';
 import toast from 'react-hot-toast';
 import { Message, MessagesResponse } from '../interfaces/messages';
 import { getSocket } from '../socket/socket.client';
-import useAuthStore from './useAuthStore';
 
 interface Store {
   loading: boolean;
@@ -19,12 +18,7 @@ const useMessageStore = create<Store>()((set) => ({
   loading: false,
   messages: [],
   sendMessage: async (receiverId: string, content: string) => {
-    // Mock a message and show in chat immediately
-    const senderId = useAuthStore.getState().authUser?._id.toString() || '';
-    set((state) => ({
-      messages: [...state.messages, { senderId, receiverId, content }]
-    }));
-
+    set({ loading: true });
     try {
       await axiosInstance.post('/messages/send', {
         receiverId,
@@ -38,6 +32,8 @@ const useMessageStore = create<Store>()((set) => ({
       } else {
         toast.error('Something went wrong');
       }
+    } finally {
+      set({ loading: false });
     }
   },
   getMessages: async (userId: string) => {
