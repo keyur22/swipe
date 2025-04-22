@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
+import ChatPage from './pages/ChatPage';
 
 function App() {
   const { checkAuth, authUser, checkingAuth } = useAuthStore();
@@ -29,6 +30,7 @@ function App() {
           element={!authUser ? <AuthPage /> : <Navigate to='/' />}
         />
         <Route path='/profile' element={<ProfilePage />} />
+        <Route path='/chat/:id' element={<ChatPage />} />
       </Routes>
       <Toaster />
     </div>
