@@ -32,10 +32,10 @@ app.use(
 
 initializeSocket(httpServer);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/matches', matchRoutes);
-app.use('/api/messages', messageRoutes);
+app.use('/apis/auth', authRoutes);
+app.use('/apis/users', userRoutes);
+app.use('/apis/matches', matchRoutes);
+app.use('/apis/messages', messageRoutes);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '/client/dist')));
