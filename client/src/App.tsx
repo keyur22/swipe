@@ -15,9 +15,10 @@ function App() {
     checkAuth();
   }, []);
 
+  console.log(authUser, checkingAuth);
+
   if (checkingAuth) return null;
 
-  // Todo: Fix protected routes
   return (
     <div className='absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to-right, #f0f0f0_1px, transparent_1px), linear-gradient(to-bottom, #f0f0f0_1px, transparent_1px)] bg-[size:6rem_4rem]'>
       <Routes>
@@ -29,8 +30,14 @@ function App() {
           path='/auth'
           element={!authUser ? <AuthPage /> : <Navigate to='/' />}
         />
-        <Route path='/profile' element={<ProfilePage />} />
-        <Route path='/chat/:id' element={<ChatPage />} />
+        <Route
+          path='/profile'
+          element={authUser ? <ProfilePage /> : <Navigate to='/auth' />}
+        />
+        <Route
+          path='/chat/:id'
+          element={authUser ? <ChatPage /> : <Navigate to='/auth' />}
+        />
       </Routes>
       <Toaster />
     </div>

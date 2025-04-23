@@ -20,7 +20,7 @@ interface Store {
 
 const useAuthStore = create<Store>()((set) => ({
   loading: false,
-  checkingAuth: false,
+  checkingAuth: true,
   authUser: null,
 
   checkAuth: async () => {

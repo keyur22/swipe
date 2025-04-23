@@ -14,7 +14,7 @@ const HomePage = () => {
       subscribeToNewMatches();
     }
 
-    // return () => unsubscribeFromNewMatches();
+    return () => unsubscribeFromNewMatches();
   }, [authUser]);
 
   return (

@@ -10,8 +10,6 @@ const Sidebar = () => {
 
   const { loading: isLoadingMyMatches, matches, getMatches } = useMatchStore();
 
-  console.log(matches);
-
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   useEffect(() => {
