@@ -14,7 +14,7 @@ interface Store {
   swipeRight: (likedUserId: string) => Promise<void>;
 }
 
-const useProfilesStore = create<Store>()((set, get) => ({
+const useProfilesStore = create<Store>()((set) => ({
   loading: false,
   profiles: [],
   swipeFeedback: null,
