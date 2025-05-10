@@ -40,7 +40,7 @@ const useProfilesStore = create<Store>()((set, get) => ({
     try {
       set({ swipeFeedback: 'passed' });
       await axiosInstance.get('/matches/swipe-left/' + dislikedUserId);
-      await get().getProfiles();
+      // await get().getProfiles();
     } catch (error) {
       console.log(error);
       toast.error('Failed to swipe left');
@@ -52,7 +52,7 @@ const useProfilesStore = create<Store>()((set, get) => ({
     try {
       set({ swipeFeedback: 'liked' });
       await axiosInstance.get('/matches/swipe-right/' + likedUserId);
-      await get().getProfiles();
+      // await get().getProfiles();
     } catch (error) {
       console.log(error);
       toast.error('Failed to swipe right');
